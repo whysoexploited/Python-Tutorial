@@ -11,69 +11,89 @@
 import random
 
 cards = (11, 2, 3, 4, 5, 6 ,7 , 8, 9, 10, 10, 10, 10)
-cards_number = len(cards)
-probability = ( 1 / cards_number ) * 100
+
+logo = r"""
+.------.            _     _            _    _            _    
+|A_  _ |.          | |   | |          | |  (_)          | |   
+|( \/ ).-----.     | |__ | | __ _  ___| | ___  __ _  ___| | __
+| \  /|K /\  |     | '_ \| |/ _` |/ __| |/ / |/ _` |/ __| |/ /
+|  \/ | /  \ |     | |_) | | (_| | (__|   <| | (_| | (__|   < 
+`-----| \  / |     |_.__/|_|\__,_|\___|_|\_\ |\__,_|\___|_|\_\\
+      |  \/ K|                            _/ |                
+      `------'                           |__/           
+"""
 
 def dealer_draw_cards():
-    first_drawn_card = random.choice(cards)
-    second_drawn_card = random.choice(cards)
-    total = first_drawn_card + second_drawn_card
+    dealer_hand = [random.choice(cards), random.choice(cards)]
+    print(f"Computer's first hand: {dealer_hand[0]}")
+    dealer_total = sum(dealer_hand)
 
-    while total < 17:
+    while  dealer_total < 17:
         new_card = random.choice(cards)
-        total += new_card
+        dealer_hand.append(new_card)
+        dealer_total = sum(dealer_hand)
 
-    if total == 21:
-        print("Blackjack! Dealer has: "  + str(total))
-    elif total > 21:
-        print("Dealer is busted: " + str(total))
-    else:
-        print("Dealer has: " + str(total))
+        while dealer_total > 21 and 11 in dealer_hand:
+            dealer_hand[dealer_hand.index(11)] = 1
+            dealer_total = sum(dealer_hand)
 
-    return total
+    return  dealer_hand, dealer_total
+
+#def player_draw_cards():
 
 def player_draw_cards():
-    first_drawn_card = random.choice(cards)
-    second_drawn_card = random.choice(cards)
-    total = first_drawn_card + second_drawn_card
+    player_hand = [random.choice(cards), random.choice(cards)]
+    player_total = sum(player_hand)
 
-    if total == 21:
-        print("Blackjack! Player has: " + str(total))
-    elif total > 21:
-        print("Player is busted: " + str(total))
+    while player_total < 21:
 
-    else: player_input = input("You have: " + str(total) + ". Do you want to draw another card? (Y/N): ").strip().lower()
-    if player_input == "y":
+        print(f"Hand: {player_hand}. with a total of: {player_total}")
+        player_input = input(f"Do you want to draw another card? (Y/N): ").strip().lower()
 
-        new_card = random.choice(cards)
-        total += new_card
+        if player_input == "y":
+            new_card = random.choice(cards)  # Draw a new card
+            player_hand.append(new_card)  # Add new card to the hand
+            player_total = sum(player_hand)  # Update total after drawing
 
-    elif player_input == "n":
-        print(f"Stay with:{total}!")
+            while player_total > 21 and 11 in player_hand:
+                player_hand[player_hand.index(11)] = 1
+                player_total = sum(player_hand)
 
-    else:
-        print("Invalid input. Please use Y or N")
+        elif player_input == "n":
+            print(f"Stay with: {player_total}!")
+            break  # Exit the loop when the player decides to stay
 
-    return total
+        else:
+            print("Invalid input. Please enter 'Y' for Yes or 'N' for No.")
+
+    return player_hand, player_total
+
+
 
 def play_game():
-    dealer = dealer_draw_cards()
-    player = player_draw_cards()
-
-    if player > 21:
-        print(f"Player is busted with: {player}. Dealer wins!")
-    elif dealer > 21:
-        print(f"Dealer is busted with: {dealer}. Player wins!")
-    elif player > dealer:
-        print(f"Player drawn: {player}, against dealer's: {dealer} Player wins!")
-    elif player < dealer:
-        print(f"Dealer drawn: {dealer}, against player's: {player} a Dealer wins!")
+    print(logo)
+    dealer_hand, dealer_total = dealer_draw_cards()
+    player_hand, player_total = player_draw_cards()
+    if player_total > 21:
+        print(f"Player is busted with: {player_total}. Dealer wins!")
+    elif dealer_total > 21:
+        print(f"Dealer is busted with: {dealer_total}. Player wins!")
+    elif player_total > dealer_total:
+        print(f"Player drawn: {player_total}, against dealer's: {dealer_total} Player wins!")
+    elif player_total < dealer_total:
+        print(f"Dealer drawn: {dealer_total}, against player's: {player_total} a Dealer wins!")
     else:
-        print(f"It's a tie! Both drawn: {player}!")
-play_game()
+        print(f"It's a tie! Both drawn: {player_total}!")
 
-#INTREBARI LEO: Nu respecta code-ul egalitatea
-#Rectificari:
-# 1. Sa mai tragi o carte daca ai nevoie
-# 2. Alege 1 sau 11 in cazul AS
-# Copia exacta a jocului/sus e doar test.
+
+while True:  # Keeps looping until user decides to quit
+    play_game()
+
+    user_choice = input("Do you want to play another game? (Y/N): ").strip().lower()
+
+    if user_choice == "n":
+        print("Thanks for playing! Goodbye! ")
+        break  # Exit the loop and stop the game
+    elif user_choice != "y":
+        print("Invalid input. Please enter 'Y' for Yes or 'N' for No.")
+

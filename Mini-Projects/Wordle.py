@@ -27,4 +27,29 @@ def wordle(secret_word, max_attempts=6):
 
     print(f"Game over! The word was {secret_word}")
 
-wordle("harsh")
+wordle("damper")
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

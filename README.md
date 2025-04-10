@@ -1,1 +1,1 @@
-Full W3School tutorial completion and some projects after finishing a course/module.
+Full W3School tutorial completion for Python and Github exercising along some fun projects after finishing a course/module.
